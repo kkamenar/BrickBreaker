@@ -44,6 +44,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
     
     @IBOutlet weak var playButton: UIButton!
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         print(randomOne)
@@ -51,6 +52,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
 
     }
 
+    //MARK: -playNewGameButton
     @IBAction func playNewGameButton(sender: UIButton) {
         
         //remove button
@@ -59,6 +61,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         
     }
     
+    //MARK: -gameSetUp
     func gameSetUp()
     {
         
@@ -134,6 +137,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         
     }
     
+    //MARK: -playGame
     //add behaviors and animation
     func playGame()
     {
@@ -267,6 +271,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
                         self.ball!.center = self.view.center
                         self.collisionBehavior.addItem(self.ball!)
                         self.view.addSubview(self.ball!)
+                        self.dynamicAnimator.updateItemUsingCurrentState(self.ball!)
 
                     }))
                 
