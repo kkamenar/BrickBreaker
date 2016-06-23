@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -24,18 +25,40 @@
                                     <action selector="playNewGameButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="srp-Ib-Io3"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lives Remaining: 3" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LSR-aW-Bki">
+                                <rect key="frame" x="0.0" y="503" width="186" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="186" id="kWT-p9-wGC"/>
+                                    <constraint firstAttribute="height" constant="21" id="y4R-uu-fTG"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="LSR-aW-Bki" secondAttribute="bottom" constant="76" id="Yqq-WV-T28"/>
                             <constraint firstItem="lo8-to-5pd" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wuZ-5N-IJi"/>
+                            <constraint firstItem="LSR-aW-Bki" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="xWb-iX-eKw"/>
                             <constraint firstItem="lo8-to-5pd" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="yfo-y8-2GY"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="U9x-9Q-h6V" appends="YES" id="jVq-sG-Vtj"/>
+                        </connections>
                     </view>
                     <connections>
+                        <outlet property="livesLabel" destination="LSR-aW-Bki" id="7qI-Dl-mhG"/>
                         <outlet property="playButton" destination="lo8-to-5pd" id="byJ-Dd-VxJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="U9x-9Q-h6V">
+                    <connections>
+                        <action selector="paddleDrag:" destination="BYZ-38-t0r" id="HSt-6M-yiO"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="440" y="364"/>
         </scene>
