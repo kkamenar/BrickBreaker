@@ -21,7 +21,12 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
     
     @IBOutlet weak var livesLabel: UILabel!
     var livesLeft = 3
-    //var lifeCounterCheater = 30
+    
+    @IBOutlet weak var levelLabel: UILabel!
+    var level = 1
+    
+    var ballSpeed : CGFloat = 0.2
+    
     
     var dynamicAnimator : UIDynamicAnimator!
     var pushBehavior : UIPushBehavior!
@@ -31,24 +36,17 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
     var paddleDynamicBehavior : UIDynamicItemBehavior!
     var brickDynamicBehavior : UIDynamicItemBehavior!
     var boundaryDynamicBehavior : UIDynamicItemBehavior!
-    
-    //variables for random direction
-    var randomOne = arc4random_uniform(UInt32(1))
-    var randomTwo = arc4random_uniform(UInt32(1))
 
     
     //define collision behavior
     var collisionBehavior : UICollisionBehavior!
 
     
-    
     @IBOutlet weak var playButton: UIButton!
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(randomOne)
-        print(randomTwo)
 
     }
 
@@ -65,12 +63,12 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
     func gameSetUp()
     {
         
-        print("new game")
+        print(ballSpeed)
         
         count = 10
-        
-        livesLeft = 3
-        livesLabel.text = "Live remaining: \(livesLeft)"
+    
+        livesLabel.text = "Lives remaining: \(livesLeft)"
+        levelLabel.text = "Level: \(level)   "
         
         //lifeCounterCheater = 30
         
@@ -115,6 +113,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         for eachBrick in allBricks
         {
             view.addSubview(eachBrick)
+            eachBrick.tag = 0
         }
         
         
@@ -124,6 +123,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         paddle!.backgroundColor = UIColor.blackColor()
         view.addSubview(paddle!)
         allItems.append(paddle!)
+    
         
         
         //create ball
@@ -132,6 +132,12 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         ball!.backgroundColor = UIColor.cyanColor()
         view.addSubview(ball!)
         allItems.append(ball!)
+        
+        if level%2 == 0
+        {
+            ball!.backgroundColor = UIColor.greenColor()
+        }
+        
         
         playGame()
         
@@ -155,7 +161,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         pushBehavior.active = true
         
         //set force
-        pushBehavior.magnitude = 0.2
+        pushBehavior.magnitude = ballSpeed
         
         //add to dynamicAnimator
         dynamicAnimator.addBehavior(pushBehavior)
@@ -216,24 +222,39 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         
             if (item1.isEqual(ball) && item2.isEqual(brick)) || (item1.isEqual(brick) && item2.isEqual(ball))
             {
+                if level%2 == 1
+                {
+                    //remove collision behavior from brick
+                    collisionBehavior.removeItem(brick)
+                    
+                    //remove brick from play
+                    brick.removeFromSuperview()
+                    
+                    count -= 1
+                    
+                }
                 
-                //remove collision behavior from brick
-                collisionBehavior.removeItem(brick)
-                
-                //remove brick from play
-                brick.removeFromSuperview()
-                //let removeItemIndex = allItems.indexOf(brick)
-                
-                //allItems.removeAtIndex(removeItemIndex!)
-                //allBricks.removeAtIndex(removeItemIndex!)
-                
-                //collisionBehavior = UICollisionBehavior(items: allItems)
+                else if level%2 == 0
+                {
+                    if brick.tag == 0
+                    {
+                        brick.backgroundColor = UIColor.redColor()
+                        brick.tag = 1
+                    }
+                    
+                    else if brick.tag == 1
+                    {
+                    
+                    //remove collision behavior from brick
+                    collisionBehavior.removeItem(brick)
+                    
+                    //remove brick from play
+                    brick.removeFromSuperview()
 
-                //dynamicAnimator.removeBehavior(brickDynamicBehavior)
-                //view.delete(brick)
-                //dynamicAnimator.updateItemUsingCurrentState(brick)
-                //brick.hidden = true
-                count -= 1
+                    count -= 1
+                }
+                }
+                
                 
             }
         }
@@ -312,6 +333,8 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         
         myAlert.addAction(UIAlertAction(title: "Yes", style: .Default, handler: {(alert: UIAlertAction!) in
             
+            self.livesLeft = 3
+            self.level = 1
             self.gameSetUp()
             
         }))
@@ -320,15 +343,10 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         
         presentViewController(myAlert, animated: true, completion: nil)
         
-        print("game over")
     }
     
     func win()
     {
-        print("win")
-        //make ball inactive
-        //ball?.removeFromSuperview()
-        //view.delete(ball)
         
         //make ball inactive
         collisionBehavior.removeItem(ball!)
@@ -344,18 +362,73 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
             collisionBehavior.removeItem(brick)
             brick.removeFromSuperview()
         }
-        
-        let myAlert = UIAlertController(title: "You Win!", message: "Would you like to play again?", preferredStyle: UIAlertControllerStyle.Alert)
-        
-        myAlert.addAction(UIAlertAction(title: "Yes", style: .Default, handler: {(action) -> Void in
-            
-            self.gameSetUp()
 
-        }))
+
         
-        myAlert.addAction(UIAlertAction(title: "No", style: .Default, handler: nil))
+        if level%2 == 1
+        {
+            
+//            //make ball inactive
+//            collisionBehavior.removeItem(ball!)
+//            ball!.removeFromSuperview()
+//            
+//            //remove paddle
+//            collisionBehavior.removeItem(paddle!)
+//            paddle!.removeFromSuperview()
+//            
+//            //remove bricks
+//            for brick in allBricks
+//            {
+//                collisionBehavior.removeItem(brick)
+//                brick.removeFromSuperview()
+//            }
+            
+            let myAlert = UIAlertController(title: "You Win!", message: "Prepare for Level \(level + 1)", preferredStyle: UIAlertControllerStyle.Alert)
+            myAlert.addAction(UIAlertAction(title: "Continue", style: .Default, handler: {(action) -> Void in
+                
+                self.gameSetUp()
+                
+            }))
+            presentViewController(myAlert, animated: true, completion: nil)
+            
+            
+        }
         
-        presentViewController(myAlert, animated: true, completion: nil)
+        else if level%2 == 0
+        {
+//            //make ball inactive
+//            collisionBehavior.removeItem(ball!)
+//            ball!.removeFromSuperview()
+//            
+//            //remove paddle
+//            collisionBehavior.removeItem(paddle!)
+//            paddle!.removeFromSuperview()
+//        
+//            //remove bricks
+//            for brick in allBricks
+//            {
+//                collisionBehavior.removeItem(brick)
+//                brick.removeFromSuperview()
+//            }
+        
+                let myAlert = UIAlertController(title: "You Win!", message: "Speed Increasing. Prepare for Level \(level + 1)", preferredStyle: UIAlertControllerStyle.Alert)
+                
+                myAlert.addAction(UIAlertAction(title: "Yes", style: .Default, handler: {(action) -> Void in
+                    
+                    self.ballSpeed += 0.2
+                    self.gameSetUp()
+
+                }))
+        
+            
+            presentViewController(myAlert, animated: true, completion: nil)
+            
+        }
+        
+        //one more level
+        level += 1
+        
+
         
     }
     

@@ -35,11 +35,23 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Level: 1  " textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Emz-0V-M6q">
+                                <rect key="frame" x="380" y="503" width="220" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="8io-hO-7eW"/>
+                                    <constraint firstAttribute="width" constant="220" id="Kxl-PE-SV9"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Emz-0V-M6q" secondAttribute="bottom" constant="76" id="E1Y-0L-rvl"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="LSR-aW-Bki" secondAttribute="bottom" constant="76" id="Yqq-WV-T28"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Emz-0V-M6q" secondAttribute="trailing" constant="-20" id="dzh-6g-0Cz"/>
                             <constraint firstItem="lo8-to-5pd" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wuZ-5N-IJi"/>
                             <constraint firstItem="LSR-aW-Bki" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="xWb-iX-eKw"/>
                             <constraint firstItem="lo8-to-5pd" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="yfo-y8-2GY"/>
@@ -49,6 +61,7 @@
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="levelLabel" destination="Emz-0V-M6q" id="Nag-nq-8cX"/>
                         <outlet property="livesLabel" destination="LSR-aW-Bki" id="7qI-Dl-mhG"/>
                         <outlet property="playButton" destination="lo8-to-5pd" id="byJ-Dd-VxJ"/>
                     </connections>
