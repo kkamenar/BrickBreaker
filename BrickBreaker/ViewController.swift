@@ -46,7 +46,22 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
 
     
     override func viewDidLoad() {
+    
         super.viewDidLoad()
+        
+        //round the corners of the play button
+        playButton.layer.cornerRadius = 8
+        
+        //add a shadow around the play button
+        playButton.layer.shadowColor = UIColor.darkGrayColor().CGColor
+        playButton.layer.shadowOffset = CGSizeMake(5, 5)
+        playButton.layer.shadowRadius = 5
+        playButton.layer.shadowOpacity = 1.0
+        
+        //call 100% background class
+        self.view.addBackground()
+        
+
 
     }
 
@@ -62,8 +77,6 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
     //MARK: -gameSetUp
     func gameSetUp()
     {
-        
-        print(ballSpeed)
         
         count = 10
     
@@ -99,7 +112,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
             {
 
                 brick = UIView(frame: CGRect(x: currentX, y: currentY, width: brickWidth, height: brickHeight))
-                brick!.backgroundColor = UIColor.blueColor()
+                brick!.backgroundColor = UIColor.orangeColor()
                 allBricks.append(brick!)
                 allItems.append(brick!)
                 currentX += (brickWidth + 5)
@@ -120,7 +133,8 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         //create paddle
         paddle = UIView(frame: CGRect(x: view.center.x, y: view.center.y + 100, width: 80, height: 15))
         paddle!.layer.cornerRadius = 5
-        paddle!.backgroundColor = UIColor.blackColor()
+        paddle!.backgroundColor = UIColor.darkGrayColor()
+        //paddle!.backgroundColor = UIColor(red: 221/255, green: 225/255, blue: 58/255, alpha: 1.0)
         view.addSubview(paddle!)
         allItems.append(paddle!)
     
@@ -129,7 +143,8 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         //create ball
         ball = UIView(frame: CGRect(x: view.center.x/2, y: view.center.y/2, width: 20, height: 20))
         ball!.layer.cornerRadius = 10
-        ball!.backgroundColor = UIColor.cyanColor()
+        ball!.backgroundColor = UIColor.whiteColor()
+        
         view.addSubview(ball!)
         allItems.append(ball!)
         
@@ -155,7 +170,14 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         pushBehavior = UIPushBehavior(items: [ball!], mode: UIPushBehaviorMode.Instantaneous)
         
         //set direction
-        pushBehavior.pushDirection = CGVectorMake(0.5, 1.0)
+        
+        
+        //random Double to set random direction for ball
+        let random1 = CGFloat(Float(arc4random()) / Float(UINT32_MAX))
+        let random2 = CGFloat(Float(arc4random()) / Float(UINT32_MAX))
+        
+        
+        pushBehavior.pushDirection = CGVectorMake(random1, random2)
         
         //make ball active
         pushBehavior.active = true
@@ -176,7 +198,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         boundaryDynamicBehavior = UIDynamicItemBehavior(items: [boundary!])
         boundaryDynamicBehavior.allowsRotation = false
         boundaryDynamicBehavior.density = 1000.0
-        dynamicAnimator.addBehavior(paddleDynamicBehavior)
+        dynamicAnimator.addBehavior(boundaryDynamicBehavior)
         
         
         //define dynamic behavior for the ball
@@ -238,7 +260,8 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
                 {
                     if brick.tag == 0
                     {
-                        brick.backgroundColor = UIColor.redColor()
+                        //brick.backgroundColor = UIColor.purpleColor()
+                        brick.backgroundColor = UIColor(red: 219/255, green: 113/255, blue: 88/255, alpha: 1.0)
                         brick.tag = 1
                     }
                     
@@ -281,9 +304,31 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
                 
                 else if livesLeft > 0
                 {
+                    
+                    if livesLeft == 1
+                    {
+                    let myAlert = UIAlertController(title: "Life Lost", message: "You have \(livesLeft) life left.", preferredStyle: UIAlertControllerStyle.Alert)
+                        myAlert.addAction(UIAlertAction(title: "Continue", style: .Default, handler: {(alert: UIAlertAction!) in
+                            
+                            //make ball active
+                            
+                            //ball!.frame.y = view.frame.center.y
+                            self.ball!.center = self.view.center
+                            self.collisionBehavior.addItem(self.ball!)
+                            self.view.addSubview(self.ball!)
+                            self.dynamicAnimator.updateItemUsingCurrentState(self.ball!)
+                            
+                        }))
+                        presentViewController(myAlert, animated: true, completion: nil)
+                    }
+                    
+                        
+                    
+                    
+                    else
+                    {
+                    
                     let myAlert = UIAlertController(title: "Life Lost", message: "You have \(livesLeft) lives left.", preferredStyle: UIAlertControllerStyle.Alert)
-                    
-                    
                     myAlert.addAction(UIAlertAction(title: "Continue", style: .Default, handler: {(alert: UIAlertAction!) in
                     
                         //make ball active
@@ -295,11 +340,14 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
                         self.dynamicAnimator.updateItemUsingCurrentState(self.ball!)
 
                     }))
+                    
                 
                     presentViewController(myAlert, animated: true, completion: nil)
+                    }
                 }
-
-            }
+        
+        }
+        
             
             if count == 0
             {
@@ -368,22 +416,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         if level%2 == 1
         {
             
-//            //make ball inactive
-//            collisionBehavior.removeItem(ball!)
-//            ball!.removeFromSuperview()
-//            
-//            //remove paddle
-//            collisionBehavior.removeItem(paddle!)
-//            paddle!.removeFromSuperview()
-//            
-//            //remove bricks
-//            for brick in allBricks
-//            {
-//                collisionBehavior.removeItem(brick)
-//                brick.removeFromSuperview()
-//            }
-            
-            let myAlert = UIAlertController(title: "You Win!", message: "Prepare for Level \(level + 1)", preferredStyle: UIAlertControllerStyle.Alert)
+            let myAlert = UIAlertController(title: "Level Complete!", message: "Prepare for Level \(level + 1)", preferredStyle: UIAlertControllerStyle.Alert)
             myAlert.addAction(UIAlertAction(title: "Continue", style: .Default, handler: {(action) -> Void in
                 
                 self.gameSetUp()
@@ -415,7 +448,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
                 
                 myAlert.addAction(UIAlertAction(title: "Yes", style: .Default, handler: {(action) -> Void in
                     
-                    self.ballSpeed += 0.2
+                    self.ballSpeed += 0.05
                     self.gameSetUp()
 
                 }))
@@ -457,4 +490,22 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
 
 
 }
+
+// 100% background
+//thank you stackoverflow!
+extension UIView {
+    func addBackground() {
+        // screen width and height:
+        let width = UIScreen.mainScreen().bounds.size.width
+        let height = UIScreen.mainScreen().bounds.size.height
+        
+        let imageViewBackground = UIImageView(frame: CGRectMake(0, 0, width, height))
+        imageViewBackground.image = UIImage(named: "orange_bg")
+        
+        // you can change the content mode:
+        imageViewBackground.contentMode = UIViewContentMode.ScaleAspectFill
+        
+        self.addSubview(imageViewBackground)
+        self.sendSubviewToBack(imageViewBackground)
+    }}
 
